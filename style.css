@@ -103,15 +103,31 @@ header {
     border-bottom: 2px solid var(--accent-yellow);
 }
 .table-responsive-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden; /* Ocultamos el scroll por defecto */
 }
-.table-responsive-wrapper::-webkit-scrollbar { height: 4px; }
-.table-responsive-wrapper::-webkit-scrollbar-thumb { background: var(--accent-yellow); border-radius: 10px; }
-.presentations-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-.presentations-table th, .presentations-table td { padding: 0.5rem; text-align: center; white-space: nowrap; }
-.presentations-table thead th { color: var(--accent-yellow); font-size: 0.85em; text-transform: uppercase; }
-.presentations-table tbody td:first-child { text-align: left; font-weight: 700; color: var(--text-light); }
+/* MODIFICACIÓN CLAVE: Aplicamos el layout fijo y reducimos espacios */
+.presentations-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    table-layout: fixed; /* Algoritmo de tabla predecible */
+}
+.presentations-table th, .presentations-table td {
+    padding: 0.5rem 0.1rem; /* Reducción agresiva de padding horizontal */
+    text-align: center;
+    white-space: nowrap;
+}
+.presentations-table thead th {
+    color: var(--accent-yellow);
+    font-size: 0.85em;
+    text-transform: uppercase;
+}
+.presentations-table tbody td:first-child {
+    text-align: left;
+    font-weight: 700;
+    color: var(--text-light);
+    width: 25%; /* Damos un ancho fijo a la primera columna */
+}
 .presentations-table .price-bs { color: var(--accent-yellow); font-weight: 700; }
 .presentations-table .price-cell { font-weight: 700; cursor: pointer; border-radius: 4px; transition: background-color 0.2s; }
 .presentations-table .price-cell:hover { background-color: rgba(255, 214, 98, 0.2); }
@@ -142,7 +158,6 @@ input:checked + .slider:before { transform: translateX(18px); }
     .logo img { height: 35px; }
 }
 @media (max-width: 767px) {
-    /* CORREGIDO: Se revierte el cambio que rompía el header. Solo se oculta el nombre. */
     .logo span { display: none; }
     .header-line-1 { gap: 0.5rem; }
     .content-area { padding: 1rem 0.5rem; }
