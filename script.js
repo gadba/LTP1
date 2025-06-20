@@ -76,29 +76,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             cardsHtml += `</tr></thead><tbody>`;
 
-            // Fila Precio $
             cardsHtml += `<tr><td>Precio $</td>`;
-            productGroup.forEach(p => {
-                // MODIFICADO: Se quita el símbolo '$'
-                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.normalPrice.toFixed(2)}</td>`;
-            });
+            productGroup.forEach(p => cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.normalPrice.toFixed(2)}</td>`);
             cardsHtml += `</tr>`;
 
-            // Fila Precio Bs.
             cardsHtml += `<tr><td>Precio Bs.</td>`;
             productGroup.forEach(p => {
                 const precioEnBs = p.normalPrice * state.bcvRate;
-                // MODIFICADO: Se quita el 'Bs. '
                 cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}"><span class="price-bs">${BS_FORMATTER.format(precioEnBs)}</span></td>`;
             });
             cardsHtml += `</tr>`;
 
-            // Fila Oferta $ (condicional)
-            cardsHtml += `<tr class="offer-row"><td>Oferta $</td>`;
-            productGroup.forEach(p => {
-                // MODIFICADO: Se quita el símbolo '$'
-                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.specialPrice.toFixed(2)}</td>`;
-            });
+            // MODIFICADO: Cambiado el texto de la etiqueta
+            cardsHtml += `<tr class="offer-row"><td>Pago en $</td>`;
+            productGroup.forEach(p => cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.specialPrice.toFixed(2)}</td>`);
             cardsHtml += `</tr>`;
             
             cardsHtml += `</tbody></table></div></div>`;
@@ -131,8 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
         detailsHtml += `<li>Presentación: <strong>${data.pres}</strong></li>`;
         detailsHtml += `<li>Precio $: <strong>${normalPrice.toFixed(2)}</strong></li>`;
         detailsHtml += `<li>Precio Bs: <strong class="price-bs">${BS_FORMATTER.format(priceInBs)}</strong></li>`;
+        // MODIFICADO: Cambiado el texto en el modal
         if (state.isOfferMode && specialPrice > 0) {
-            detailsHtml += `<li>Precio Oferta $: <strong>${specialPrice.toFixed(2)}</strong></li>`;
+            detailsHtml += `<li>Pago en $: <strong>${specialPrice.toFixed(2)}</strong></li>`;
         }
         detailsHtml += '</ul>';
         elements.productDetailContent.innerHTML = detailsHtml;
@@ -180,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleOfferToggle(event) {
         const checkbox = event.target;
         if (checkbox.checked) {
-            const pwd = prompt("Ingrese la clave para ver las ofertas:");
+            const pwd = prompt("Ingrese la clave para ver los precios de pago en $: ");
             state.isOfferMode = pwd === OFFER_PASSWORD;
             if (!state.isOfferMode) { alert("Clave incorrecta."); checkbox.checked = false; }
         } else {
