@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // MODIFICADO: Nueva función para renderizar tarjetas de producto
     function renderProductTable() {
         let products = [];
         if (state.searchTerm) {
@@ -80,7 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Fila Precio $
             cardsHtml += `<tr><td>Precio $</td>`;
             productGroup.forEach(p => {
-                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">$${p.normalPrice.toFixed(2)}</td>`;
+                // MODIFICADO: Se quita el símbolo '$'
+                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.normalPrice.toFixed(2)}</td>`;
             });
             cardsHtml += `</tr>`;
 
@@ -88,14 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
             cardsHtml += `<tr><td>Precio Bs.</td>`;
             productGroup.forEach(p => {
                 const precioEnBs = p.normalPrice * state.bcvRate;
-                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}"><span class="price-bs">Bs. ${BS_FORMATTER.format(precioEnBs)}</span></td>`;
+                // MODIFICADO: Se quita el 'Bs. '
+                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}"><span class="price-bs">${BS_FORMATTER.format(precioEnBs)}</span></td>`;
             });
             cardsHtml += `</tr>`;
 
             // Fila Oferta $ (condicional)
             cardsHtml += `<tr class="offer-row"><td>Oferta $</td>`;
             productGroup.forEach(p => {
-                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">$${p.specialPrice.toFixed(2)}</td>`;
+                // MODIFICADO: Se quita el símbolo '$'
+                cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.specialPrice.toFixed(2)}</td>`;
             });
             cardsHtml += `</tr>`;
             
@@ -261,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.bcvRateDisplay.addEventListener('click', handleRateClick);
         elements.offerToggle.addEventListener('change', handleOfferToggle);
         elements.searchInput.addEventListener('input', handleSearchInput);
-        elements.menuTabsContainer.addEventListener('click', (e) => e.target.matches('.menu-button') && (state.activeMenu = e.target.dataset.menu, state.activeTipo = Object.keys(state.storeData[state.activeMenu] || {})[0], renderUI()));
-        elements.tipoTabsContainer.addEventListener('click', (e) => e.target.matches('.tipo-button') && (state.activeTipo = e.target.dataset.tipo, renderUI()));
+        elements.menuTabsContainer.addEventListener('click', (e) => { if (e.target.matches('.menu-button')) { state.activeMenu = e.target.dataset.menu; state.activeTipo = Object.keys(state.storeData[state.activeMenu] || {})[0] || null; renderUI(); } });
+        elements.tipoTabsContainer.addEventListener('click', (e) => { if (e.target.matches('.tipo-button')) { state.activeTipo = e.target.dataset.tipo; renderUI(); } });
         elements.contentContainer.addEventListener('click', handleContentClick);
         elements.closeDetailModalBtn.addEventListener('click', closeDetailModal);
         elements.productDetailModalOverlay.addEventListener('click', (e) => e.target === elements.productDetailModalOverlay && closeDetailModal());
