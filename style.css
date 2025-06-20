@@ -1,4 +1,4 @@
-/* style.css - Versión final con diseño de tarjetas de producto */
+/* style.css - Versión final con diseño de tarjetas de producto y grid de 2 columnas */
 
 :root {
     --primary-blue: #00539C;
@@ -84,11 +84,11 @@ header {
 .content-area { padding: 1rem; }
 #loading-indicator { font-size: 1.2rem; text-align: center; padding: 3rem; font-weight: 600; color: var(--accent-yellow); }
 
-/* --- NUEVO: Estilos para Tarjetas de Producto --- */
+/* --- Estilos para Tarjetas de Producto --- */
 .product-card-container {
-    display: flex;
-    flex-direction: column;
+    display: grid; /* Cambiado a grid para controlar columnas */
     gap: 1.5rem;
+    grid-template-columns: 1fr; /* Por defecto 1 columna (móvil) */
 }
 .product-card {
     background-color: var(--card-background);
@@ -137,12 +137,9 @@ header {
 .presentations-table .price-cell:hover {
     background-color: rgba(255, 214, 98, 0.2);
 }
-.offer-row {
-    display: none;
-}
-body.offer-mode-on .offer-row {
-    display: table-row;
-}
+.offer-row { display: none; }
+body.offer-mode-on .offer-row { display: table-row; }
+
 .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
 .switch.small-switch { transform: scale(0.85); transform-origin: right; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; transition: .4s; border-radius: 34px; }
@@ -155,26 +152,24 @@ input:checked + .slider:before { transform: translateX(18px); }
 .modal-overlay.visible { display: flex; }
 .modal-content { background-color: var(--primary-blue); padding: 2rem; border-radius: 16px; border: 2px solid var(--accent-yellow); box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 450px; text-align: center; position: relative; }
 .modal-content h1 { color: var(--accent-yellow); font-size: 1.8rem; margin-bottom: 1rem; font-weight: 700; padding-right: 30px; }
-.modal-content p { color: var(--text-light); font-size: 1rem; margin-bottom: 1.5rem; }
-.modal-content form { display: flex; flex-direction: column; gap: 1.5rem; }
-.modal-content label { font-size: 1.1rem; font-weight: 600; }
-.modal-content input[type="text"] { background-color: var(--dark-background); border: 2px solid var(--accent-yellow); border-radius: 8px; padding: 0.8rem; color: var(--text-light); font-size: 1.2rem; font-weight: 600; text-align: center; outline: none; }
 .close-modal-btn {
     position: absolute; top: 5px; right: 10px; background: transparent; border: none;
     font-size: 2.5rem; color: var(--text-light); cursor: pointer; line-height: 1; padding: 0.5rem;
 }
 #product-detail-content ul { list-style: none; padding: 0; }
-#product-detail-content li {
-    padding: 0.75rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    display: flex; justify-content: space-between;
-}
+#product-detail-content li { padding: 0.75rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2); display: flex; justify-content: space-between; }
 #product-detail-content li:last-child { border-bottom: none; }
 #product-detail-content li strong { color: var(--accent-yellow); font-weight: 700; }
-.store-button {
-    background-color: var(--dark-background); color: var(--accent-yellow); border: 2px solid var(--accent-yellow);
-    padding: 0.8rem 1.5rem; font-size: 1.1rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s;
-}
+.store-button { background-color: var(--dark-background); color: var(--accent-yellow); border: 2px solid var(--accent-yellow); padding: 0.8rem 1.5rem; font-size: 1.1rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
 .store-button:hover { background-color: var(--accent-yellow); color: var(--dark-background); }
+
+/* --- MEDIA QUERIES --- */
+@media (min-width: 1024px) {
+    /* NUEVO: 2 columnas en pantallas grandes */
+    .product-card-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
 
 @media (min-width: 768px) {
     .content-area { padding: 2rem; }
@@ -188,12 +183,12 @@ input:checked + .slider:before { transform: translateX(18px); }
     .header-controls { order: 2; flex-grow: 1; justify-content: flex-end; }
     .search-container { order: 3; width: 100%; margin-top: 0.5rem; }
     .content-area { padding: 1rem 0.5rem; }
-    .product-card { padding: 1rem; }
-    .product-card-title { font-size: 1.2rem; }
+    /* MODIFICADO: Ajustes finos para móvil */
+    .product-card { padding: 1rem 0.5rem; }
+    .product-card-title { font-size: 1.1rem; }
     .presentations-table { font-size: 0.8rem; }
+    .presentations-table th, .presentations-table td { padding: 0.6rem 0.1rem; }
 }
 
 body.app-loading header,
-body.app-loading main {
-    display: none;
-}
+body.app-loading main { display: none; }
