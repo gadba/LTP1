@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.values(groupedProducts).forEach(productGroup => {
             const firstProduct = productGroup[0];
             
-            // MODIFICADO: Añadido el div contenedor
             cardsHtml += `<div class="product-card">
                             <h3 class="product-card-title">${firstProduct.name}</h3>
                             <div class="table-responsive-wrapper">
@@ -98,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.contentContainer.innerHTML = cardsHtml;
     }
     
-    // ... (el resto del script.js no tiene cambios) ...
     function showLoading(isLoading, message = '') {
         elements.loadingIndicator.style.display = isLoading ? 'block' : 'none';
         if (isLoading) elements.loadingIndicator.textContent = message;
