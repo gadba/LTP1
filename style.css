@@ -20,7 +20,7 @@ body {
     font-family: var(--font-family);
     background-color: var(--dark-background);
     color: var(--text-light);
-    line-height: 1.5; /* Reducido para compactar */
+    line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -102,18 +102,12 @@ header {
     margin-bottom: 0.8rem; padding-bottom: 0.4rem;
     border-bottom: 2px solid var(--accent-yellow);
 }
-/* NUEVO: Contenedor para scroll horizontal en la tabla interna */
 .table-responsive-wrapper {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+    -webkit-overflow-scrolling: touch;
 }
-.table-responsive-wrapper::-webkit-scrollbar {
-    height: 4px;
-}
-.table-responsive-wrapper::-webkit-scrollbar-thumb {
-    background: var(--accent-yellow);
-    border-radius: 10px;
-}
+.table-responsive-wrapper::-webkit-scrollbar { height: 4px; }
+.table-responsive-wrapper::-webkit-scrollbar-thumb { background: var(--accent-yellow); border-radius: 10px; }
 .presentations-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .presentations-table th, .presentations-table td { padding: 0.5rem; text-align: center; white-space: nowrap; }
 .presentations-table thead th { color: var(--accent-yellow); font-size: 0.85em; text-transform: uppercase; }
@@ -123,8 +117,23 @@ header {
 .presentations-table .price-cell:hover { background-color: rgba(255, 214, 98, 0.2); }
 .offer-row { display: none; }
 body.offer-mode-on .offer-row { display: table-row; }
-
-/* ... (resto de los estilos de switch, modal, etc. sin cambios) ... */
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.switch.small-switch { transform: scale(0.85); transform-origin: right; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--accent-yellow); }
+input:checked + .slider:before { transform: translateX(18px); }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
+.modal-overlay.visible { display: flex; }
+.modal-content { background-color: var(--primary-blue); padding: 2rem; border-radius: 16px; border: 2px solid var(--accent-yellow); box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 450px; text-align: center; position: relative; }
+.modal-content h1 { color: var(--accent-yellow); font-size: 1.8rem; margin-bottom: 1rem; font-weight: 700; padding-right: 30px; }
+.close-modal-btn { position: absolute; top: 5px; right: 10px; background: transparent; border: none; font-size: 2.5rem; color: var(--text-light); cursor: pointer; line-height: 1; padding: 0.5rem; }
+#product-detail-content ul { list-style: none; padding: 0; }
+#product-detail-content li { padding: 0.75rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2); display: flex; justify-content: space-between; }
+#product-detail-content li:last-child { border-bottom: none; }
+#product-detail-content li strong { color: var(--accent-yellow); font-weight: 700; }
+.store-button { background-color: var(--dark-background); color: var(--accent-yellow); border: 2px solid var(--accent-yellow); padding: 0.8rem 1.5rem; font-size: 1.1rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.store-button:hover { background-color: var(--accent-yellow); color: var(--dark-background); }
 
 /* --- MEDIA QUERIES --- */
 @media (min-width: 1024px) { .product-card-container { grid-template-columns: 1fr 1fr; } }
@@ -133,10 +142,9 @@ body.offer-mode-on .offer-row { display: table-row; }
     .logo img { height: 35px; }
 }
 @media (max-width: 767px) {
-    .header-line-1 { flex-wrap: wrap; align-items: center; }
-    .logo { display: none; }
-    .search-container { order: 2; width: 100%; margin-top: 0.5rem; }
-    .header-controls { order: 1; flex-grow: 1; }
+    /* CORREGIDO: Se revierte el cambio que rompía el header. Solo se oculta el nombre. */
+    .logo span { display: none; }
+    .header-line-1 { gap: 0.5rem; }
     .content-area { padding: 1rem 0.5rem; }
 }
 
