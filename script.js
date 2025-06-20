@@ -76,18 +76,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             cardsHtml += `</tr></thead><tbody>`;
 
-            cardsHtml += `<tr><td>Precio $</td>`;
+            cardsHtml += `<tr class="price-row"><td>Precio $</td>`;
             productGroup.forEach(p => cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.normalPrice.toFixed(2)}</td>`);
             cardsHtml += `</tr>`;
 
-            cardsHtml += `<tr><td>Precio Bs.</td>`;
+            cardsHtml += `<tr class="price-row"><td>Precio Bs.</td>`;
             productGroup.forEach(p => {
                 const precioEnBs = p.normalPrice * state.bcvRate;
                 cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}"><span class="price-bs">${BS_FORMATTER.format(precioEnBs)}</span></td>`;
             });
             cardsHtml += `</tr>`;
 
-            cardsHtml += `<tr class="offer-row"><td>Pago en $</td>`;
+            cardsHtml += `<tr class="offer-row price-row"><td>Pago en $</td>`;
             productGroup.forEach(p => cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.specialPrice.toFixed(2)}</td>`);
             cardsHtml += `</tr>`;
             
@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.body.classList.toggle('offer-mode-on', state.isOfferMode);
     }
 
-    // --- MANEJADORES DE EVENTOS ---
     function handleContentClick(event) {
         const cell = event.target.closest('td.price-cell');
         if (!cell || !cell.dataset.name) return;
