@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.values(groupedProducts).forEach(productGroup => {
             const firstProduct = productGroup[0];
             
+            // MODIFICADO: Añadido el div contenedor
             cardsHtml += `<div class="product-card">
                             <h3 class="product-card-title">${firstProduct.name}</h3>
                             <div class="table-responsive-wrapper">
@@ -87,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             cardsHtml += `</tr>`;
 
-            // MODIFICADO: Cambiado el texto de la etiqueta
             cardsHtml += `<tr class="offer-row"><td>Pago en $</td>`;
             productGroup.forEach(p => cardsHtml += `<td class="price-cell" data-name="${p.name}" data-pres="${p.pres}" data-price-normal="${p.normalPrice}" data-price-special="${p.specialPrice}">${p.specialPrice.toFixed(2)}</td>`);
             cardsHtml += `</tr>`;
@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.contentContainer.innerHTML = cardsHtml;
     }
     
+    // ... (el resto del script.js no tiene cambios) ...
     function showLoading(isLoading, message = '') {
         elements.loadingIndicator.style.display = isLoading ? 'block' : 'none';
         if (isLoading) elements.loadingIndicator.textContent = message;
@@ -122,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         detailsHtml += `<li>Presentación: <strong>${data.pres}</strong></li>`;
         detailsHtml += `<li>Precio $: <strong>${normalPrice.toFixed(2)}</strong></li>`;
         detailsHtml += `<li>Precio Bs: <strong class="price-bs">${BS_FORMATTER.format(priceInBs)}</strong></li>`;
-        // MODIFICADO: Cambiado el texto en el modal
         if (state.isOfferMode && specialPrice > 0) {
             detailsHtml += `<li>Pago en $: <strong>${specialPrice.toFixed(2)}</strong></li>`;
         }
@@ -184,13 +184,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function handleSearchInput(event) {
         state.searchTerm = event.target.value.trim().toLowerCase();
+        elements.clearSearchBtn.style.display = state.searchTerm ? 'block' : 'none';
+
         if (state.searchTerm) {
             document.querySelectorAll('.menu-button.active, .tipo-button.active').forEach(b => b.classList.remove('active'));
         }
         renderProductTable();
     }
+    
+    function handleClearSearch() {
+        elements.searchInput.value = '';
+        handleSearchInput({ target: { value: '' } });
+        elements.searchInput.focus();
+    }
 
-    // --- LÓGICA DE DATOS Y FLUJO ---
     function validateAndSetRate(rawInput) {
         if (!rawInput || rawInput.trim() === "") { alert("Por favor, introduce un valor para la tasa."); return false; }
         const parsedRate = parseFloat(rawInput.replace(',', '.'));
@@ -248,13 +255,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- INICIALIZACIÓN ---
     function setupEventListeners() {
         elements.rateForm.addEventListener('submit', handleInitialRateSubmit);
         elements.storeButtonsContainer.addEventListener('click', handleStoreSelection);
         elements.bcvRateDisplay.addEventListener('click', handleRateClick);
         elements.offerToggle.addEventListener('change', handleOfferToggle);
         elements.searchInput.addEventListener('input', handleSearchInput);
+        elements.clearSearchBtn.addEventListener('click', handleClearSearch);
         elements.menuTabsContainer.addEventListener('click', (e) => { if (e.target.matches('.menu-button')) { state.activeMenu = e.target.dataset.menu; state.activeTipo = Object.keys(state.storeData[state.activeMenu] || {})[0] || null; renderUI(); } });
         elements.tipoTabsContainer.addEventListener('click', (e) => { if (e.target.matches('.tipo-button')) { state.activeTipo = e.target.dataset.tipo; renderUI(); } });
         elements.contentContainer.addEventListener('click', handleContentClick);
