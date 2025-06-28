@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinturas Mañongo - Catálogo</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#12181F"/>
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-title" content="Precios Pinturas">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="app-loading">
+
+    <div id="initial-welcome-message" class="initial-welcome-container">
+        <span>Bienvenid@, espere un momento por favor...</span>
+    </div>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <nav id="sidebar-menu" class="sidebar-menu">
+        <div class="sidebar-header">
+            <h2>Menú Principal</h2>
+            <button id="close-sidebar-btn" class="close-sidebar-btn">×</button>
+        </div>
+        <ul class="sidebar-nav-links">
+            <li><button class="sidebar-link" data-view="precios"><i data-feather="tag"></i> Catálogo de Precios</button></li>
+            <li><button class="sidebar-link" data-view="cartas"><i data-feather="image"></i> Cartas de Colores</button></li>
+            <li><button class="sidebar-link" data-view="reportes"><i data-feather="bar-chart-2"></i> Reporte de Ventas</button></li>
+        </ul>
+    </nav>
+    
+    <header>
+        <div class="header-content">
+            <div class="header-line-1">
+                <button id="hamburger-btn" class="header-button hamburger-btn" title="Menú Principal"><i data-feather="menu"></i></button>
+                <div class="logo">
+                    <img src="logo.png" alt="Logo de Pinturas Mañongo">
+                    <span>Pinturas Mañongo</span>
+                </div>
+                <div id="search-container" class="search-container">
+                    <input type="search" id="search-input" placeholder="Buscar producto..." autocomplete="off">
+                    <button id="clear-search-btn" title="Limpiar búsqueda">×</button>
+                </div>
+                <div class="header-controls">
+                     <button id="history-btn" class="header-button" title="Historial"><i data-feather="archive"></i></button>
+                    <div id="offer-mode-container" class="offer-mode-switch">
+                        <label for="offer-toggle">Ofertas</label>
+                        <label class="switch small-switch"><input type="checkbox" id="offer-toggle"><span class="slider"></span></label>
+                    </div>
+                    <div id="bcv-rate-display" class="rate-container"></div>
+                </div>
+            </div>
+            <div id="last-update-display" class="last-update-banner"></div>
+            <div id="catalog-nav-bars">
+                <div class="header-line-2">
+                    <div id="menu-tabs-container" class="menu-nav"></div>
+                </div>
+                <div class="header-line-3 filter-sort-bar">
+                    <div id="tipo-tabs-container" class="tipo-nav"></div>
+                    <div class="theme-switch-wrapper">
+                        <i data-feather="sun"></i>
+                        <label class="switch"><input type="checkbox" id="theme-toggle"><span class="slider"></span></label>
+                        <i data-feather="moon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="catalog-view-container">
+            <div id="catalog-content-container" class="content-area">
+                <div id="loading-indicator">Cargando catálogo...</div>
+            </div>
+        </div>
+        
+        <div id="color-charts-view-container" class="hidden">
+             <div id="color-charts-filters" class="color-charts-filters">
+                <select id="empresa-filter-select"><option value="Todos">Todas las Empresas</option></select>
+            </div>
+             <div id="color-charts-content-container" class="content-area"></div>
+        </div>
+
+        <div id="reports-view-container" class="hidden">
+            <div class="content-area">
+                <div class="report-controls">
+                    <div class="report-group">
+                        <label for="report-start-date">Fecha Inicio</label>
+                        <input type="date" id="report-start-date" class="report-input">
+                    </div>
+                    <div class="report-group">
+                        <label for="report-end-date">Fecha Fin</label>
+                        <input type="date" id="report-end-date" class="report-input">
+                    </div>
+                    <div class="report-group">
+                        <label for="report-filter-menu">Filtrar por Menú</label>
+                        <select id="report-filter-menu" class="report-select"></select>
+                    </div>
+                    <div class="report-group">
+                        <label for="report-filter-tipo">Filtrar por Tipo</label>
+                        <select id="report-filter-tipo" class="report-select"></select>
+                    </div>
+                    <div class="report-group">
+                        <label for="report-filter-pres">Filtrar por Presentación</label>
+                        <select id="report-filter-pres" class="report-select"></select>
+                    </div>
+                    <!-- **NUEVO** Filtro por Producto como desplegable -->
+                    <div class="report-group">
+                        <label for="report-filter-producto">Filtrar por Producto</label>
+                        <select id="report-filter-producto" class="report-select"></select>
+                    </div>
+                    <div class="report-group">
+                        <label for="report-group-by">Agrupar por</label>
+                        <select id="report-group-by" class="report-select">
+                            <option value="producto">Producto</option>
+                            <option value="producto_color">Producto y Color</option>
+                            <option value="menu">Categoría (Menú)</option>
+                            <option value="tipo">Sub-Categoría (Tipo)</option>
+                            <option value="pres">Presentación</option>
+                        </select>
+                    </div>
+                    <div class="report-group">
+                        <label for="report-metric">Mostrar</label>
+                        <select id="report-metric" class="report-select">
+                            <option value="dinero">Venta en $</option>
+                            <option value="unidades">Unidades Vendidas</option>
+                            <option value="ambas">Ambas ($ y Unidades)</option>
+                        </select>
+                    </div>
+                    <div class="report-group-action">
+                        <button id="generate-report-btn" class="modal-button"><i data-feather="play"></i> Generar Reporte</button>
+                    </div>
+                </div>
+                <div id="report-results-container">
+                    <!-- Los resultados del reporte se mostrarán aquí -->
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <button id="work-area-fab" class="quote-fab" title="Ver Borrador Actual">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+        <span id="work-area-item-count" class="quote-item-count">0</span>
+    </button>
+    
+    <!-- MODALES COMPLETOS RESTAURADOS -->
+    <div id="store-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h1>Seleccione una Tienda</h1>
+            <div id="store-buttons-container" class="store-buttons-container"></div>
+        </div>
+    </div>
+    <div id="rate-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h1>Establecer Tasa BCV</h1>
+            <p>Por favor, introduce la tasa de cambio del día (BCV) para continuar:</p>
+            <form id="rate-form">
+                <label for="rate-input">Tasa BCV:</label>
+                <input type="text" id="rate-input" name="rate-input" autocomplete="off" inputmode="decimal" placeholder="Ej: 36.50">
+                <button type="submit" class="modal-button">Continuar</button>
+            </form>
+        </div>
+    </div>
+    <div id="product-detail-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-product-detail-modal-btn" class="close-modal-btn">×</button>
+            <h1 id="product-detail-modal-product-name">Detalles del Producto</h1>
+            <div id="product-detail-content"></div>
+            <div id="add-to-work-area-section" class="add-to-quote-section">
+                <div class="quote-controls-wrapper">
+                    <div class="quantity-control">
+                        <label for="quantity-input">Cantidad:</label>
+                        <input type="number" id="quantity-input" value="1" min="1" step="1">
+                    </div>
+                    <div id="color-selection-container" class="color-control">
+                        <label for="color-select">Color:</label>
+                        <select id="color-select" class="modal-input" style="width: auto; padding: 0.75rem;"></select>
+                    </div>
+                </div>
+                <button id="add-to-work-area-btn" class="modal-button">Añadir</button>
+            </div>
+        </div>
+    </div>
+    <div id="work-area-modal-overlay" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <button id="close-work-area-modal-btn" class="close-modal-btn">×</button>
+            <h1 id="work-area-title">Borrador Actual</h1>
+            <div id="work-area-content-container"></div>
+            <div id="work-area-footer" class="work-area-footer">
+                 <div class="discount-section">
+                    <label for="discount-input">Descuento (%):</label>
+                    <input type="number" id="discount-input" min="0" max="100" step="1" placeholder="Ej: 10">
+                    <button id="apply-discount-btn" class="modal-button secondary-button">Aplicar</button>
+                </div>
+                <div class="work-area-summary">
+                    <div id="work-area-totals"></div>
+                    <div class="work-area-actions">
+                        <div id="main-actions" class="final-actions">
+                            <button id="save-quote-btn" class="modal-button"><i data-feather="file-text"></i> Guardar Cotización</button>
+                            <button id="register-sale-btn" class="modal-button"><i data-feather="dollar-sign"></i> Registrar Venta</button>
+                            <button id="clear-work-area-btn" class="modal-button secondary-button"><i data-feather="trash"></i> Borrar todo</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="sale-options" class="sale-options hidden">
+                    <div class="payment-method-selector">
+                        <strong>Calcular Venta como:</strong>
+                        <input type="radio" id="pricing-method-normal-usd" name="pricing-method" value="Pago $" checked>
+                        <label for="pricing-method-normal-usd">Pago $</label>
+                        <input type="radio" id="pricing-method-normal-bs" name="pricing-method" value="Pago Bs.">
+                        <label for="pricing-method-normal-bs">Pago Bs.</label>
+                        <div id="offer-pricing-option" class="hidden" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" id="pricing-method-offer" name="pricing-method" value="Oferta en $">
+                            <label id="offer-pricing-label" for="pricing-method-offer">Oferta en $</label>
+                        </div>
+                    </div>
+                    <button id="confirm-sale-btn" class="modal-button">Confirmar y Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="client-info-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-client-info-btn" class="close-modal-btn">×</button>
+            <h1 id="client-info-title">Datos del Cliente</h1>
+            <p id="client-info-description"></p>
+            <form id="client-info-form">
+                <div class="modal-form-group">
+                    <label for="client-name-input">Razón Social:</label>
+                    <input type="text" id="client-name-input" class="modal-input" placeholder="Nombre de la empresa o persona" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="client-rif-input">RIF / C.I.:</label>
+                    <input type="text" id="client-rif-input" class="modal-input" placeholder="J-12345678-9" required>
+                </div>
+                <div class="modal-button-group">
+                    <button type="button" id="cancel-client-info-btn" class="modal-button secondary-button">Cancelar</button>
+                    <button type="submit" class="modal-button">Continuar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="history-choice-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+             <button id="close-history-choice-modal-btn" class="close-modal-btn">×</button>
+            <h1>Ver Historial</h1>
+            <div class="history-choice-buttons">
+                <button id="view-quotes-history-btn" class="modal-button"><i data-feather="file-text"></i> Cotizaciones de Hoy</button>
+                <button id="view-sales-history-btn" class="modal-button"><i data-feather="dollar-sign"></i> Ventas de Hoy</button>
+            </div>
+        </div>
+    </div>
+    <div id="history-list-modal-overlay" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <button id="close-history-list-modal-btn" class="close-modal-btn">×</button>
+            <h1 id="history-list-title">Historial</h1>
+            <div class="history-controls">
+                <label for="history-date-picker">Seleccionar fecha:</label>
+                <input type="date" id="history-date-picker">
+            </div>
+            <div id="history-list-container-wrapper">
+                <div id="history-list-container"></div>
+            </div>
+            <div id="history-totals-summary"></div>
+        </div>
+    </div>
+    <div id="detail-modal-overlay" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <button id="close-detail-modal-btn" class="close-modal-btn">×</button>
+            <h1 id="detail-title">Detalle</h1>
+            <div id="detail-content"></div>
+             <div class="detail-actions">
+                <button id="download-pdf-btn" class="modal-button">Descargar PDF</button>
+            </div>
+        </div>
+    </div>
+    <div id="notification-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h1 id="notification-title">Notificación</h1>
+            <p id="notification-message">Este es un mensaje de ejemplo.</p>
+            <div id="notification-buttons" class="modal-button-group">
+                <button id="notification-cancel-btn" class="modal-button secondary-button">Cancelar</button>
+                <button id="notification-ok-btn" class="modal-button">Aceptar</button>
+            </div>
+        </div>
+    </div>
+    <div id="prompt-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h1 id="prompt-title">Entrada Requerida</h1>
+            <p id="prompt-message">Por favor, ingrese el valor:</p>
+            <form id="prompt-form">
+                <input type="password" id="prompt-input" class="modal-input" autocomplete="off">
+                <div class="modal-button-group">
+                    <button type="button" id="prompt-cancel-btn" class="modal-button secondary-button">Cancelar</button>
+                    <button type="submit" class="modal-button">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="success-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i data-feather="check-circle"></i>
+            </div>
+            <h1 id="success-title">¡Éxito!</h1>
+            <p id="success-message">La operación se completó correctamente.</p>
+            <div id="success-buttons" class="modal-button-group">
+                <button id="success-action-btn" class="modal-button">Descargar PDF</button>
+                <button id="success-close-btn" class="modal-button secondary-button">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="script.js" defer></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('ServiceWorker: Registrado'))
+                .catch(err => console.log('ServiceWorker: Falló registro: ', err));
+            });
+        }
+    </script>
+</body>
+</html>
